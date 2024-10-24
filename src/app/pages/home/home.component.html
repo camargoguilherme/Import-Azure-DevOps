@@ -1,0 +1,174 @@
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-start align-items-center mt-1">
+    <div class="col-12 col-md-8 col-lg-4 col-xl-4">
+      <section class="project input-container">
+        <label for="project">Projeto</label>
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione o projeto"
+          [items]="projects"
+          bindLabel="name"
+          bindValue="name"
+          [(ngModel)]="projectSelected"
+          (change)="handleChangeProject()"
+        >
+        </ng-select>
+      </section>
+    </div>
+    <div class="col-12 col-md-8 col-lg-4 col-xl-4">
+      <section class="project input-container">
+        <label for="project">Team</label>
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione o projeto"
+          [items]="teams"
+          bindLabel="name"
+          bindValue="name"
+          [(ngModel)]="teamSelected"
+          (change)="handleChangeTeams()"
+        >
+        </ng-select>
+      </section>
+    </div>
+    <div class="col-12 col-md-8 col-lg-4 col-xl-4">
+      <section class="sprint input-container">
+        <label for="iteration">Sprint</label>
+
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione a sprint"
+          [items]="iterations"
+          bindLabel="name"
+          bindValue="name"
+          [disabled]="!projectSelected"
+          [(ngModel)]="iterationSelected"
+        >
+        </ng-select>
+      </section>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-start align-items-center mt-4">
+    <div class="d-flex flex-row col-12 col-md-8 col-lg-6 col-xl-4">
+      <section>
+        <input
+          type="file"
+          class="file-input hidden-display"
+          accept="application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          (change)="onChange($event)"
+          #fileUpload
+        />
+
+        <button
+          class="button-primary"
+          (click)="fileUpload.click()"
+          [disabled]="!projectSelected"
+        >
+          Selecionar arquivo
+        </button>
+
+        <button
+          class="button-primary-color ms-2"
+          (click)="handleCreateWorkItems()"
+          [disabled]="
+            (projectSelected && !iterationSelected) ||
+            (!projectSelected && !iterationSelected)
+          "
+          [matTooltip]="!projectSelected ? 'Selecione um projeto' : ''"
+          [matTooltip]="
+            projectSelected && !iterationSelected
+              ? 'Selecione uma sprint'
+              : 'Selecione um projeto'
+          "
+        >
+          Criar Itens
+        </button>
+      </section>
+    </div>
+
+    <div class="col-12 col-md-8 col-lg-6 col-xl-6">
+      <section>
+        <div *ngIf="file">
+          <section class="file-info">
+            <span> <strong>Arquivo</strong>: {{ file.name }} </span>
+          </section>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row d-flex justify-content-start align-items-center mt-4">
+    <div class="col-12 col-md-8 col-lg-12 col-xl-10">
+      <div class="accordion w-100" id="accordion-work-items">
+        <div
+          class="card mb-3"
+          *ngFor="let feature of featuries; let indexFeature = index"
+        >
+          <div class="card-body">
+            <h2 class="accordion-header">Feature - {{ feature.title }}</h2>
+
+            <div
+              class="accordion-item"
+              *ngFor="
+                let userStory of feature.userStories;
+                let indexUserStory = index
+              "
+            >
+              <h2 class="accordion-header">
+                <button
+                  class="accordion-button"
+                  type="button"
+                  data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapseUserStory' + indexUserStory"
+                  aria-expanded="true"
+                  [attr.aria-controls]="'#collapseUserStory' + indexUserStory"
+                >
+                  User Story - {{ userStory.title }}
+                  <!-- <span *ngIf="userStory.id"> Criado </span> -->
+                </button>
+              </h2>
+              <div
+                id="collapseUserStory{{ indexUserStory }}"
+                class="accordion-collapse collapse show"
+                data-bs-parent="#accordion-user-story-{{ indexUserStory }}"
+              >
+                <div class="accordion-body">
+                  <section
+                    class="d-flex flex-row justify-content-between align-items-center mb-1"
+                    *ngFor="let task of userStory.tasks; let indexTask = index"
+                  >
+                    <article class="item-task p-1">
+                      <span> Task - {{ task.title }} </span>
+                      <span>
+                        Tempo estimado:
+                        {{ task.estimate ? task.estimate + "h" : "N/A" }}
+                      </span>
+                      <!-- <span *ngIf="task.id"> Criado </span> -->
+                    </article>
+                    <img
+                      class="icon-check-cicle"
+                      *ngIf="task.id"
+                      src="./assets/icons/check-circle.svg"
+                    />
+                    <span
+                      *ngIf="!task.id"
+                      class="button-delete pointer"
+                      matTooltip="Remover Task - {{ task.title }}"
+                      (click)="
+                        handleRemoveTask(
+                          indexFeature,
+                          indexUserStory,
+                          indexTask
+                        )
+                      "
+                    >
+                      X
+                    </span>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

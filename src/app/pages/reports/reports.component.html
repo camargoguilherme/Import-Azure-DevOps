@@ -1,0 +1,116 @@
+<div class="container py-5 h-100">
+  <div class="row d-flex justify-content-start align-items-center mt-1">
+    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+      <section class="project input-container">
+        <label for="project">Projeto</label>
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione o projeto"
+          [items]="projects"
+          bindLabel="name"
+          bindValue="name"
+          [(ngModel)]="projectSelected"
+          (change)="handleChangeProject()"
+        >
+        </ng-select>
+      </section>
+    </div>
+
+    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+      <section class="project input-container">
+        <label for="project">Team</label>
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione o projeto"
+          [items]="teams"
+          [multiple]="true"
+          bindLabel="name"
+          bindValue="name"
+          [(ngModel)]="teamsSelected"
+          (change)="handleChangeTeams()"
+        >
+        </ng-select>
+      </section>
+    </div>
+
+    <div class="col-12 col-md-4 col-lg-4 col-xl-4">
+      <section class="sprint input-container">
+        <label for="iteration">Sprint</label>
+
+        <ng-select
+          appendTo="body"
+          placeholder="Selecione a sprint"
+          [items]="iterations"
+          [multiple]="true"
+          bindLabel="name"
+          bindValue="name"
+          [disabled]="!projectSelected"
+          [(ngModel)]="iterationsSelected"
+          (change)="getAllWorkList()"
+        >
+        </ng-select>
+      </section>
+    </div>
+    <div class="mt-4 col-12 col-md-4 col-lg-4 col-xl-4">
+      <button
+        class="button-primary-color"
+        (click)="handleDownloadXlsx()"
+        [disabled]="!projectSelected"
+        [matTooltip]="!projectSelected ? 'Selecione um projeto' : ''"
+      >
+        Gerar relatório
+      </button>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-12">
+      <div class="card-content">
+        <table class="table table-responsive-md">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Id</th>
+              <th>Type</th>
+              <th>Title</th>
+              <th>ParentTitle</th>
+              <th>AssignedTo</th>
+              <th>State</th>
+              <th>Tags</th>
+              <th>Remaining</th>
+              <th>Completed</th>
+              <th>OriginalEstimate</th>
+              <th>Area (Team)</th>
+              <th>Iteration</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="workItemsList.length === 0">
+            <tr class="no-register frist-td">
+              <td colspan="100%">
+                <span> Nenhum registro encontrado </span>
+              </td>
+            </tr>
+          </tbody>
+
+          <tbody>
+            <tr *ngFor="let item of workItemsList">
+              <td></td>
+              <th>{{ item.Id }}</th>
+              <th>{{ item.WorkItemType }}</th>
+              <th>{{ item.Title }}</th>
+              <th>{{ item.ParentTitle }}</th>
+              <th>{{ item.AssignedTo }}</th>
+              <th>{{ item.State }}</th>
+              <th>{{ item.Tags }}</th>
+              <th>{{ item.RemainingWork }}</th>
+              <th>{{ item.CompletedWork }}</th>
+              <th>{{ item.OriginalEstimate }}</th>
+              <th>{{ item.AreaPath }}</th>
+              <th>{{ item.IterationPath }}</th>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

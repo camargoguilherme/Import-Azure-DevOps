@@ -1,0 +1,5 @@
+version: "3.2"
+services:
+  import_azure_devops:
+    image: ghcr.io/camargoguilherme/import-azure-devops:latest
+    restart: always
