@@ -96,7 +96,7 @@ export class AzureDevOpsService extends BaseService {
 
         for (const userStory of feature.userStories) {
           if (!userStory.id)
-            userStory.id = await this.createUserStory(projectName, iterationPath, userStory);
+            userStory.id = await this.createUserStory(projectName, iterationPath, userStory, feature.id);
           for (const task of userStory.tasks) {
             task.id = await this.createTask(projectName, iterationPath, task, userStory.id);
           }
@@ -171,7 +171,7 @@ export class AzureDevOpsService extends BaseService {
     })
   }
 
-  private async createUserStory(projectName: string, iterationPath: string, userStory: UserStoryDTO) {
+  private async createUserStory(projectName: string, iterationPath: string, userStory: UserStoryDTO, featureId?: string) {
     const data: Field[] = [
       {
         op: "add",
@@ -188,11 +188,6 @@ export class AzureDevOpsService extends BaseService {
         path: "/fields/System.State",
         value: "New",
       },
-      // {
-      //   op: "add",
-      //   path: "/fields/System.AssignedTo",
-      //   value: assignedTo,
-      // },
       {
         op: "add",
         path: "/fields/System.IterationPath",
@@ -200,13 +195,13 @@ export class AzureDevOpsService extends BaseService {
       },
     ];
 
-    if (userStory.parentId) {
+    if (userStory.parentId || featureId) {
       const field = {
         op: "add",
         path: "/relations/-",
         value: {
           rel: "System.LinkTypes.Hierarchy-Reverse",
-          url: `${environment.apiUrl}/${projectName}/_apis/wit/workitems/${userStory.parentId}`,
+          url: `${environment.apiUrl}/${projectName}/_apis/wit/workitems/${userStory.parentId || featureId}`,
           attributes: {
             comment: "Associated with",
           },

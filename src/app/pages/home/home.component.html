@@ -103,7 +103,17 @@
           *ngFor="let feature of featuries; let indexFeature = index"
         >
           <div class="card-body">
-            <h2 class="accordion-header">Feature - {{ feature.title }}</h2>
+            <h2 class="accordion-header">
+              Feature - {{ feature.title }}
+              <span
+                *ngIf="!feature.id"
+                class="button-delete pointer"
+                matTooltip="Remover Feature - {{ feature.title }}"
+                (click)="handleRemoveFeature(indexFeature)"
+              >
+                X
+              </span>
+            </h2>
 
             <div
               class="accordion-item"
@@ -114,7 +124,7 @@
             >
               <h2 class="accordion-header">
                 <button
-                  class="accordion-button"
+                  class="accordion-button d-flex justify-content-between align-items-center"
                   type="button"
                   data-bs-toggle="collapse"
                   [attr.data-bs-target]="'#collapseUserStory' + indexUserStory"
@@ -122,8 +132,15 @@
                   [attr.aria-controls]="'#collapseUserStory' + indexUserStory"
                 >
                   User Story - {{ userStory.title }}
-                  <!-- <span *ngIf="userStory.id"> Criado </span> -->
                 </button>
+                <span
+                  *ngIf="!userStory.id"
+                  class="button-delete pointer"
+                  matTooltip="Remover User Story - {{ userStory.title }}"
+                  (click)="handleRemoveUserStory(indexFeature, indexUserStory)"
+                >
+                  X
+                </span>
               </h2>
               <div
                 id="collapseUserStory{{ indexUserStory }}"

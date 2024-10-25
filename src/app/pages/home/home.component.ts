@@ -95,26 +95,48 @@ export class HomeComponent implements OnInit {
     }
   }
 
+  handleRemoveFeature(indexFeature: number) {
+    this.featuries.splice(indexFeature, 1);
+  }
+
+  handleRemoveUserStory(indexFeature: number, indexUserStory: number) {
+    const feature = this.featuries[indexFeature];
+    feature.userStories.splice(indexUserStory, 1);
+
+    if (feature.userStories.length == 0) {
+      this.featuries.splice(indexFeature, 1);
+    } else {
+      this.featuries[indexFeature] = feature;
+    }
+
+  }
+
   handleRemoveTask(indexFeature: number, indexUserStory: number, indexTask: number) {
     const feature = this.featuries[indexFeature];
     let userStory = feature.userStories[indexUserStory];
     userStory.tasks.splice(indexTask, 1);
 
-    feature.userStories[indexUserStory] = userStory;
-    userStory.tasks.splice(indexTask, 1);
+    if (userStory.tasks.length == 0) {
+      feature.userStories.splice(indexUserStory, 1);
+    } else {
+      feature.userStories[indexUserStory] = userStory;
+    }
 
     this.featuries[indexFeature] = feature;
   }
 
   // On file Select
   async onChange(event: any) {
+    this.file = null;
+    this.featuries = null;
     const file: File = event.target.files[0];
 
     if (file && this.projectSelected) {
       // we will implement this method later
-      this.file = file
+      this.file = file;
       this.featuries = await this.importXlsxService.handleImportXLSX(this.projectSelected, this.teamSelected, file);
     }
+    event.target.value = '';
   }
 
   handleClearSelections() {
