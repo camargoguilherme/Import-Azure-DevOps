@@ -6,10 +6,12 @@ export class WorkItemDTO {
 }
 
 class WorkItemFieldDTO {
+  "Custom.EstimativaProjeto": string = '';
   "System.AreaPath": string = '';
   "System.TeamProject": string = '';
   "System.IterationPath": string = '';
   "System.WorkItemType": string = '';
+  "System.AssignedTo": string = '';
   "System.State": string = '';
   "System.Reason": string = '';
   "System.CreatedDate": string = '';

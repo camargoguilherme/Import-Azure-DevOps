@@ -5,4 +5,5 @@ export class FeatureDTO {
   title: string = '';
   userStories: UserStoryDTO[] = []
   parentId?: string = '';
+  needCreate?: boolean = false;
 }

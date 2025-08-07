@@ -17,6 +17,15 @@ span.button-delete {
 .accordion-header {
   position: relative;
 
+  .accordion-button {
+    color: black;
+
+    span {
+      margin-left: 20px;
+      color: black;
+    }
+  }
+
   .button-delete {
     position: absolute;
     top: calc(35%);

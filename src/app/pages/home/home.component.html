@@ -104,9 +104,9 @@
         >
           <div class="card-body">
             <h2 class="accordion-header">
-              Feature - {{ feature.title }}
+              {{ feature.title ? 'Feature - ' + feature.title : '' }}
               <span
-                *ngIf="!feature.id"
+                *ngIf="feature.title"
                 class="button-delete pointer"
                 matTooltip="Remover Feature - {{ feature.title }}"
                 (click)="handleRemoveFeature(indexFeature)"
@@ -131,7 +131,12 @@
                   aria-expanded="true"
                   [attr.aria-controls]="'#collapseUserStory' + indexUserStory"
                 >
+
                   User Story - {{ userStory.title }}
+                  <span *ngIf="userStory.estimate">
+                    Tempo estimado:
+                    {{ userStory.estimate ? userStory.estimate + "h" : "N/A" }}
+                  </span>
                 </button>
                 <span
                   *ngIf="!userStory.id"

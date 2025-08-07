@@ -91,7 +91,7 @@ export class AzureDevOpsService extends BaseService {
   async createWorkItems(projectName: string, iterationPath: string, featuries: FeatureDTO[]): Promise<FeatureDTO[]> {
     try {
       for (const feature of featuries) {
-        if (!feature.id)
+        if (!feature.id && feature.needCreate)
           feature.id = await this.createFeature(projectName, iterationPath, feature);
 
         for (const userStory of feature.userStories) {
@@ -187,6 +187,22 @@ export class AzureDevOpsService extends BaseService {
         op: "add",
         path: "/fields/System.State",
         value: "New",
+      },
+      {
+        op: "add",
+        path: "/fields/System.AssignedTo",
+        value: userStory.assignedTo ?? '',
+      },
+      {
+        op: "add",
+        path: "/fields/Custom.EstimativaProjeto",
+        from: null,
+        value: userStory.estimate ?? '',
+      },
+      {
+        op: "add",
+        path: "/fields/System.Tags",
+        value: userStory.tags,
       },
       {
         op: "add",

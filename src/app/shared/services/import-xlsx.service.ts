@@ -85,6 +85,7 @@ export class ImportXlsxService {
             title: row.title,
             userStories: [],
             parentId: row.parentId ?? '',
+            needCreate: true
           };
 
           featuries.push(feature);
@@ -94,6 +95,9 @@ export class ImportXlsxService {
           let userStory: UserStoryDTO = {
             id: row.workItemId ?? '',
             title: row.title,
+            assignedTo: row.assignedTo,
+            estimate: row.estimate?.toString(),
+            tags: row.tags ?? "",
             tasks: [],
             parentId: row.parentId ?? '',
           };
@@ -102,9 +106,17 @@ export class ImportXlsxService {
 
           if (!row.parentId) {
             let feature = featuries.at(featuries.length - 1);
-            feature.userStories.push(userStory);
 
-            featuries[featuries.length - 1] = feature;
+            if (!feature) {
+              feature = new FeatureDTO();
+              feature.userStories.push(userStory);
+              featuries.push(feature);
+            } else {
+              feature.userStories.push(userStory);
+              featuries[featuries.length - 1] = feature;
+            }
+
+
           } else {
             let index = featuries.findIndex(
               (feature) => feature?.id == row.parentId
@@ -158,6 +170,9 @@ export class ImportXlsxService {
               userStory = {
                 id: row.parentId,
                 title: workItem.fields['System.Title'],
+                assignedTo: workItem.fields['System.AssignedTo'],
+                estimate: workItem.fields['Custom.EstimativaProjeto'],
+                tags: workItem.fields['System.Tags'],
                 tasks: [],
               };
 
